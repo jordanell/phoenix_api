@@ -7,16 +7,25 @@ defmodule PhoenixApi.UserControllerTest do
     conn = build_conn()
     user = insert(:user)
 
-    conn = get conn, user_path(conn, :index)
+    conn = get(conn, user_path(conn, :index))
 
-    assert json_response(conn, 200) == %{
-      "users" => [%{
-        "first_name" => user.first_name,
-        "last_name" => user.last_name,
-        "email" => user.email,
-        "inserted_at" => Ecto.DateTime.cast!(user.inserted_at) |> Ecto.DateTime.to_iso8601,
-        "updated_at" => Ecto.DateTime.cast!(user.updated_at) |> Ecto.DateTime.to_iso8601
-      }]
-    }
+    assert json_response(conn, 200) == render_json("index.json", users: [user])
+  end
+
+  test "#show renders a single user" do
+    conn = build_conn()
+    user = insert(:user)
+
+    conn = get(conn, user_path(conn, :show, user))
+
+    assert json_response(conn, 200) == render_json("show.json", user: user)
+  end
+
+  defp render_json(template, assigns) do
+    assigns = Map.new(assigns)
+
+    PhoenixApi.UserView.render(template, assigns)
+    |> Poison.encode!
+    |> Poison.decode!
   end
 end

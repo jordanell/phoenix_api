@@ -22,6 +22,6 @@ defmodule PhoenixApi.Router do
   scope "/api", PhoenixApi do
     pipe_through :api
 
-    resources "/users", UserController, only: [:index]
+    resources "/users", UserController, only: [:index, :show]
   end
 end

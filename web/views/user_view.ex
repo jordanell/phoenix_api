@@ -7,6 +7,12 @@ defmodule PhoenixApi.UserView do
     }
   end
 
+  def render("show.json", %{user: user}) do
+    %{
+      user: user_json(user)
+    }
+  end
+
   def user_json(user) do
     %{
       first_name: user.first_name,
